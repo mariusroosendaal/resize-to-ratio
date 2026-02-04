@@ -1,0 +1,14 @@
+{
+  "name": "Resize to Ratio",
+  "id": "1488572643184012930",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "index.html",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
+}
