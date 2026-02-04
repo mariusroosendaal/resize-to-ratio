@@ -1,5 +1,12 @@
 <script>
-  import { Button, Checkbox, Input, Label, Text } from "figma-ui3-kit-svelte";
+  import { Button, Checkbox, Input, Text } from "figma-ui3-kit-svelte";
+  import {
+    PluginLayout,
+    FieldGroup,
+    Footer,
+    sendToPlugin,
+    createMessageHandler,
+  } from "figma-plugin-utils";
 
   let imageLayerName = "image";
   let maintainWidth = true;
@@ -13,71 +20,53 @@
 
   function handleResize() {
     isResizing = true;
-    parent.postMessage(
-      {
-        pluginMessage: {
-          type: "resize-cards",
-          options: {
-            imageLayerName,
-            maintainWidth,
-          },
-        },
+    sendToPlugin("resize-cards", {
+      options: {
+        imageLayerName,
+        maintainWidth,
       },
-      "*",
-    );
+    });
   }
 
-  window.onmessage = (event) => {
-    const msg = event.data?.pluginMessage;
-    if (!msg) return;
-
-    if (msg.type === "selection-change") {
+  window.onmessage = createMessageHandler({
+    "selection-change": (msg) => {
       selectionCount = msg.count || 0;
-    }
-
-    if (msg.type === "resize-done") {
+    },
+    "resize-done": () => {
       isResizing = false;
-    }
-  };
+    },
+  });
 </script>
 
-<div class="wrapper">
-  <div class="content">
-    <div class="field">
-      <Label>Image Layer Name</Label>
+<div class="plugin-container">
+  <PluginLayout>
+    <FieldGroup label="Image Layer Name">
       <Input bind:value={imageLayerName} placeholder="Layer name to find" />
-    </div>
+    </FieldGroup>
 
     <Checkbox bind:checked={maintainWidth}>
       Maintain Width (adjust height)
     </Checkbox>
 
     <Text variant="body-medium" color="secondary">{selectionMessage}</Text>
+  </PluginLayout>
 
+  <Footer variant="full">
     <Button
       variant="primary"
       on:click={handleResize}
       disabled={selectionCount === 0 || isResizing}
+      fullWidth
     >
       {isResizing ? "Resizing..." : "Resize Cards"}
     </Button>
-  </div>
+  </Footer>
 </div>
 
 <style>
-  .wrapper {
-    padding: var(--size-xxsmall);
-  }
-
-  .content {
+  .plugin-container {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: var(--size-xsmall);
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--size-xxxsmall);
   }
 </style>
