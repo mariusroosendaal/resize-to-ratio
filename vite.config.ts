@@ -1,9 +1,14 @@
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import type { Plugin } from "vite";
 import type { OutputBundle, OutputOptions, OutputAsset } from "rollup";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+
+// ES module compatibility for __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Escape special regex characters in a string for use in RegExp constructor
@@ -14,7 +19,7 @@ function escapeRegExp(value: string) {
 
 /**
  * Custom Vite plugin to handle SVG imports from figma-ui3-kit-svelte
- * 
+ *
  * Problem: The UI3 Kit imports SVG files that need to be bundled into the HTML
  * Solution: Convert SVG files to inline strings so they can be embedded in the bundle
  */
@@ -28,7 +33,7 @@ function ui3InlineSvg(): Plugin {
       if (!id.includes(".svg")) return;
       const filePath = id.split("?")[0];
       if (!filePath.endsWith(".svg")) return;
-      
+
       // Read SVG content and return it as a JSON string export
       const svg = readFileSync(filePath, "utf-8");
       return `export default ${JSON.stringify(svg)};`;
@@ -38,10 +43,13 @@ function ui3InlineSvg(): Plugin {
 
 /**
  * Custom Vite plugin to inline all CSS and JS into a single HTML file for Figma
- * 
+ *
  * Problem: Figma plugins require a single HTML file with no external dependencies
  * Solution: This plugin takes the built HTML/CSS/JS and inlines everything into one file,
  *          producing a self-contained `index.html` for the UI
+ *
+ * IMPORTANT: Uses function replacement in String.replace() to avoid $ pattern
+ * interpretation in minified code (e.g., $& would be replaced with the matched string)
  */
 function inlineFigmaHtml(): Plugin {
   return {
@@ -58,17 +66,14 @@ function inlineFigmaHtml(): Plugin {
       let html = String(htmlAsset.source);
 
       // Remove modulepreload links (not needed in inlined version)
-      html = html.replace(
-        /<link\s+[^>]*rel=["']modulepreload["'][^>]*>/gi,
-        ""
-      );
+      html = html.replace(/<link\s+[^>]*rel=["']modulepreload["'][^>]*>/gi, "");
 
       // Step 1: Inline all CSS files into <style> tags
       for (const [fileName, asset] of Object.entries(bundle)) {
         if (asset.type !== "asset") continue;
         if (!fileName.endsWith(".css")) continue;
         const css = String(asset.source ?? "");
-        
+
         // Find the <link> tag for this CSS file and replace with inline <style>
         const hrefPattern = new RegExp(
           `<link[^>]+rel=["']stylesheet["'][^>]+href=["'](?:\\./|/|\\.\\./)?${escapeRegExp(
@@ -77,7 +82,8 @@ function inlineFigmaHtml(): Plugin {
           "i"
         );
         if (hrefPattern.test(html)) {
-          html = html.replace(hrefPattern, `<style>${css}</style>`);
+          // Use function replacement to avoid $ pattern interpretation in CSS
+          html = html.replace(hrefPattern, () => `<style>${css}</style>`);
           delete bundle[fileName]; // Remove CSS file from bundle
         }
       }
@@ -85,7 +91,7 @@ function inlineFigmaHtml(): Plugin {
       // Step 2: Inline all JS chunks into <script> tags
       for (const [fileName, chunk] of Object.entries(bundle)) {
         if (chunk.type !== "chunk") continue;
-        
+
         // Find the <script> tag for this JS file and replace with inline script
         const scriptPattern = new RegExp(
           `<script[^>]+src=["'](?:\\./|/|\\.\\./)?${escapeRegExp(
@@ -94,9 +100,11 @@ function inlineFigmaHtml(): Plugin {
           "i"
         );
         if (scriptPattern.test(html)) {
+          // Use function replacement to avoid $ pattern interpretation in minified JS
+          // Use regular script (not module) for Figma sandbox compatibility
           html = html.replace(
             scriptPattern,
-            `<script type="module">${chunk.code}</script>`
+            () => `<script>${chunk.code}</script>`
           );
           // Remove any modulepreload links for this chunk
           html = html.replace(
@@ -135,17 +143,18 @@ function inlineFigmaHtml(): Plugin {
 export default defineConfig({
   base: "./",
   plugins: [
-    ui3InlineSvg(),       // Handle SVG imports from UI3 Kit
-    svelte(),             // Compile Svelte components
-    inlineFigmaHtml(),    // Inline everything into single HTML file
+    ui3InlineSvg(), // Handle SVG imports from UI3 Kit
+    svelte(), // Compile Svelte components
+    inlineFigmaHtml(), // Inline everything into single HTML file
   ],
   build: {
     outDir: "dist",
-    emptyOutDir: false,   // Don't clear dist/ (manifest.json gets copied here)
+    emptyOutDir: false, // Don't clear dist/ (manifest.json gets copied here)
+    target: "es2017", // Figma's JS sandbox doesn't support ES2020+ (no ?. or ??)
     rollupOptions: {
       input: {
-        ui: resolve(__dirname, "src/index.html"),    // UI entry point
-        code: resolve(__dirname, "src/code.ts"),     // Plugin code entry point
+        ui: resolve(__dirname, "src/index.html"), // UI entry point
+        code: resolve(__dirname, "src/code.ts"), // Plugin code entry point
       },
       output: {
         // Use clean filenames instead of hashed names
