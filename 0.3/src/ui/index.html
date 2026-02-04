@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="./tmp/figma-plugin-ds.css"><link rel="stylesheet" href="./tmp/styles.css"> </head>
+
+<body class="p-xxsmall">
+ 
+  <div class="container">
+
+    <div class="input">
+      <label class="label" for="imageLayerName">Image Layer Name</label>
+      <input class="input__field" type="text" id="imageLayerName" value="image" placeholder="Layer name to find">
+      <!-- <div class="info">Name of the layer containing the image</div> -->
+    </div>
+    <div class="checkbox">
+      <input class="checkbox__box" type="checkbox" id="maintainWidth" checked>
+      <label class="checkbox__label" for="maintainWidth">Maintain Width (adjust height)</label>
+    </div>
+    <div id="selection-message" class="input">Select cards to get started.</div>
+
+    <div class="input">
+      
+      <button class="button button--primary" id="resize" disabled>Resize Cards</button>
+    </div>
+  </div>
+  
+  <script src="./tmp/scripts.js"></script>
+
+</body>
+</html>
