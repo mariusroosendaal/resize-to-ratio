@@ -41,12 +41,12 @@
 
 <div class="plugin-container">
   <PluginLayout>
-    <FieldGroup label="Image Layer Name">
+    <FieldGroup label="Image layer name">
       <Input bind:value={imageLayerName} placeholder="Layer name to find" />
     </FieldGroup>
 
     <Checkbox bind:checked={maintainWidth}>
-      Maintain Width (adjust height)
+      Maintain width (adjust height)
     </Checkbox>
 
     <EmptyState message={selectionMessage} size="small" />
@@ -59,7 +59,7 @@
       disabled={selectionCount === 0 || isResizing}
       fullWidth
     >
-      {isResizing ? "Resizing..." : "Resize Cards"}
+      {isResizing ? "Resizing..." : "Resize cards"}
     </Button>
   </Footer>
 </div>
