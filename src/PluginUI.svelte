@@ -1,9 +1,10 @@
 <script>
-  import { Button, Checkbox, Input, Text } from "figma-ui3-kit-svelte";
+  import { Button, Checkbox, Input } from "figma-ui3-kit-svelte";
   import {
     PluginLayout,
     FieldGroup,
     Footer,
+    EmptyState,
     sendToPlugin,
     createMessageHandler,
   } from "figma-plugin-utils";
@@ -15,8 +16,8 @@
 
   $: selectionMessage =
     selectionCount > 0
-      ? `${selectionCount} item${selectionCount > 1 ? "s" : ""} selected.`
-      : "Select one or more cards.";
+      ? `${selectionCount} item${selectionCount > 1 ? "s" : ""} selected`
+      : "Select one or more cards";
 
   function handleResize() {
     isResizing = true;
@@ -48,7 +49,7 @@
       Maintain Width (adjust height)
     </Checkbox>
 
-    <Text variant="body-medium" color="secondary">{selectionMessage}</Text>
+    <EmptyState message={selectionMessage} size="small" />
   </PluginLayout>
 
   <Footer variant="full">
