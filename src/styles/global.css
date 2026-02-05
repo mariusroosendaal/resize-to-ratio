@@ -192,7 +192,6 @@ body {
   -moz-text-rendering: optimizeLegibility;
 }
 
-
 /* Hyperlink styling */
 a {
   color: var(--figma-text-brand);
