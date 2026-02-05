@@ -51,7 +51,9 @@ async function resizeSelectedCards(options: ResizeOptions) {
 
   // This check is a safeguard, but the UI should prevent this from being called with 0 selection.
   if (selection.length === 0) {
-    figma.notify("Please select at least one component instance");
+    figma.notify("Please select at least one component instance.", {
+      error: true,
+    });
     return;
   }
 
@@ -63,7 +65,6 @@ async function resizeSelectedCards(options: ResizeOptions) {
     try {
       // Check if the node is resizable
       if (!isResizable(node)) {
-        console.log(`Node "${node.name}" is not resizable, skipping`);
         skippedCount++;
         continue;
       }
@@ -72,9 +73,6 @@ async function resizeSelectedCards(options: ResizeOptions) {
       const imageLayers = findLayersByName(node, imageLayerName);
 
       if (imageLayers.length === 0) {
-        console.log(
-          `No layer named "${imageLayerName}" found in "${node.name}"`,
-        );
         continue;
       }
 
@@ -127,7 +125,7 @@ async function resizeSelectedCards(options: ResizeOptions) {
       }
     } catch (error) {
       console.error("Error processing node:", error);
-      figma.notify(`Error processing "${node.name}". See console for details.`);
+      figma.notify(`Error processing "${node.name}".`, { error: true });
     }
   }
 
