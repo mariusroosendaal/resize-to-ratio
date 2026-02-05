@@ -88,7 +88,7 @@ async function resizeSelectedCards(options: ResizeOptions) {
 
         if (imageFills.length > 0 && imageFills[0].imageHash) {
           const imageFill = imageFills[0];
-          const image = figma.getImageByHash(imageFill.imageHash);
+          const image = figma.getImageByHash(imageFill.imageHash!);
 
           if (!image) continue;
 
