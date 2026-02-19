@@ -49,7 +49,7 @@
       Maintain width (adjust height)
     </Checkbox>
 
-    <EmptyState message={selectionMessage} size="small" />
+    <EmptyState message={selectionMessage} size="small" class="empty-state--selection" />
   </PluginLayout>
 
   <Footer variant="full">
@@ -69,5 +69,9 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+  }
+  :global(.empty-state--selection) {
+    border: 1px solid var(--figma-color-border);
+    border-radius: var(--border-radius-medium);
   }
 </style>

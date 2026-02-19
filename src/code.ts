@@ -1,6 +1,6 @@
 // This plugin resizes component instances based on the aspect ratio of their nested image layers.
 // It now includes a listener for selection changes to update the UI.
-figma.showUI(__html__, { themeColors: true, width: 240, height: 219 });
+figma.showUI(__html__, { themeColors: true, width: 240, height: 226 });
 
 // --- Selection Handling ---
 
@@ -59,6 +59,7 @@ async function resizeSelectedCards(options: ResizeOptions) {
 
   let resizedCount = 0;
   let skippedCount = 0;
+  let unavailableCount = 0;
 
   // Process each selected node
   for (const node of selection) {
@@ -90,9 +91,17 @@ async function resizeSelectedCards(options: ResizeOptions) {
 
           if (!image) continue;
 
-          // Get image dimensions
-          const { width: naturalWidth, height: naturalHeight } =
-            await image.getSizeAsync();
+          // Get image dimensions — may fail if the image hasn't been loaded into
+          // memory yet (e.g. off-screen components). Skip silently in that case.
+          let naturalWidth: number;
+          let naturalHeight: number;
+          try {
+            ({ width: naturalWidth, height: naturalHeight } =
+              await image.getSizeAsync());
+          } catch {
+            unavailableCount++;
+            continue;
+          }
 
           const imageAspectRatio = naturalWidth / naturalHeight;
 
@@ -130,7 +139,9 @@ async function resizeSelectedCards(options: ResizeOptions) {
   }
 
   let message = `Resized ${resizedCount} card${resizedCount !== 1 ? "s" : ""}`;
-  if (skippedCount > 0) {
+  if (unavailableCount > 0) {
+    message += `, skipped ${unavailableCount} (image not loaded)`;
+  } else if (skippedCount > 0) {
     message += ` (skipped ${skippedCount} non-resizable node${skippedCount !== 1 ? "s" : ""})`;
   }
   figma.notify(message);

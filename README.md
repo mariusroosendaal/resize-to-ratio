@@ -20,6 +20,10 @@ Adjusts the dimensions of selected components based on the natural aspect ratio 
 - **Maintain width** - Keep width fixed, adjust height to match ratio
 - **Maintain height** - Keep height fixed, adjust width to match ratio
 
+## Requirements
+
+- The image layer must use "Fill" for both width and height constraints.
+
 ## Development
 
 ```bash
