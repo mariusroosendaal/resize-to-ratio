@@ -1,18 +1,19 @@
 {
   "name": "resize-to-ratio",
   "version": "1.0.0",
-  "description": "A modern Figma plugin boilerplate built with Svelte and a UI3 Kit",
+  "description": "Figma plugin: resize components to match the aspect ratio of nested image fills.",
   "type": "module",
   "author": "Marius Roosendaal",
   "license": "MIT",
   "keywords": [
     "figma",
     "figma-plugin",
+    "aspect-ratio",
+    "components",
+    "images",
+    "layout",
     "svelte",
-    "boilerplate",
-    "typescript",
-    "vite",
-    "ui3-kit"
+    "typescript"
   ],
   "engines": {
     "node": ">=18.0.0"

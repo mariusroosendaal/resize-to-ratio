@@ -49,7 +49,11 @@
       Maintain width (adjust height)
     </Checkbox>
 
-    <EmptyState message={selectionMessage} size="small" class="empty-state--selection" />
+    <EmptyState
+      message={selectionMessage}
+      size="small"
+      class="empty-state--selection"
+    />
   </PluginLayout>
 
   <Footer variant="full">
