@@ -1,7 +1,7 @@
 {
   "name": "resize-to-ratio",
   "version": "1.0.1",
-  "description": "Figma plugin: resize components to match the aspect ratio of nested image fills.",
+  "description": "Resize components to match the aspect ratio of nested image fills.",
   "type": "module",
   "author": "Marius Roosendaal",
   "license": "MIT",
