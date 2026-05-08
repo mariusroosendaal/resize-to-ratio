@@ -1,5 +1,5 @@
 <script>
-  import { Button, Checkbox, Input } from "figma-ui3-kit-svelte";
+  import { Button, Checkbox, Input, Tooltip } from "figma-ui3-kit-svelte";
   import {
     PluginLayout,
     FieldGroup,
@@ -41,8 +41,8 @@
 
 <div class="plugin-container">
   <PluginLayout>
-    <FieldGroup label="Image layer name">
-      <Input bind:value={imageLayerName} placeholder="Layer name to find" />
+    <FieldGroup label="Image layer name" labelFor="image-layer-name">
+      <Input bind:value={imageLayerName} placeholder="Layer name to find" id="image-layer-name" />
     </FieldGroup>
 
     <Checkbox bind:checked={maintainWidth}>
@@ -57,14 +57,14 @@
   </PluginLayout>
 
   <Footer variant="full">
-    <Button
-      variant="primary"
-      on:click={handleResize}
-      disabled={selectionCount === 0 || isResizing}
-      fullWidth
-    >
-      {isResizing ? "Resizing..." : "Resize cards"}
-    </Button>
+      <Button
+        variant="primary"
+        on:click={handleResize}
+        disabled={selectionCount === 0 || isResizing}
+        fullWidth
+      >
+        {isResizing ? "Resizing..." : "Resize cards"}
+      </Button>
   </Footer>
 </div>
 
@@ -78,4 +78,5 @@
     border: 1px solid var(--figma-color-border);
     border-radius: var(--border-radius-medium);
   }
+
 </style>
