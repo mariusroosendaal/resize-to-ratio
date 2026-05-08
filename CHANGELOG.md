@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Disabled Resize cards button now shows a tooltip when nothing is selected
+- Image layer name input has an associated label
+
 ## [1.0.0] - 2026-02-19
 
 ### Changed
