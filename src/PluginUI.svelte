@@ -1,10 +1,9 @@
 <script>
-  import { Button, Checkbox, Input, Tooltip } from "figma-ui3-kit-svelte";
+  import { Button, Checkbox, Input } from "figma-ui3-kit-svelte";
   import {
     PluginLayout,
     FieldGroup,
     Footer,
-    EmptyState,
     sendToPlugin,
     createMessageHandler,
   } from "figma-plugin-utilities";
@@ -19,6 +18,8 @@
       ? `${selectionCount} item${selectionCount > 1 ? "s" : ""} selected`
       : "Select one or more cards";
 
+  $: isDisabled = selectionCount === 0 || isResizing || imageLayerName.trim() === "";
+
   function handleResize() {
     isResizing = true;
     sendToPlugin("resize-cards", {
@@ -30,6 +31,10 @@
   }
 
   window.onmessage = createMessageHandler({
+    "plugin-ready": (msg) => {
+      imageLayerName = msg.settings?.imageLayerName ?? "image";
+      maintainWidth = msg.settings?.maintainWidth ?? true;
+    },
     "selection-change": (msg) => {
       selectionCount = msg.count || 0;
     },
@@ -53,18 +58,14 @@
       Maintain width (adjust height)
     </Checkbox>
 
-    <EmptyState
-      message={selectionMessage}
-      size="small"
-      class="empty-state--selection"
-    />
+    <p class="selection-status">{selectionMessage}</p>
   </PluginLayout>
 
   <Footer variant="full">
     <Button
       variant="primary"
       on:click={handleResize}
-      disabled={selectionCount === 0 || isResizing}
+      disabled={isDisabled}
       fullWidth
     >
       {isResizing ? "Resizing..." : "Resize cards"}
@@ -78,8 +79,14 @@
     display: flex;
     flex-direction: column;
   }
-  :global(.empty-state--selection) {
+
+  .selection-status {
+    margin: 0;
+    padding: var(--size-xsmall) var(--size-small);
     border: 1px solid var(--figma-color-border);
     border-radius: var(--border-radius-medium);
+    color: var(--figma-color-text-secondary);
+    font-size: var(--font-size-xsmall);
+    text-align: center;
   }
 </style>
