@@ -3,7 +3,10 @@ figma.showUI(__html__, { themeColors: true, width: 240, height: 226 });
 const STORAGE_KEY = "resize-to-ratio-settings";
 
 const sendSelectionCount = () => {
-  figma.ui.postMessage({ type: "selection-change", count: figma.currentPage.selection.length });
+  figma.ui.postMessage({
+    type: "selection-change",
+    count: figma.currentPage.selection.length,
+  });
 };
 
 figma.on("selectionchange", sendSelectionCount);
@@ -11,8 +14,12 @@ figma.on("selectionchange", sendSelectionCount);
 (async () => {
   const saved = await figma.clientStorage.getAsync(STORAGE_KEY);
   const settings = {
-    imageLayerName: typeof saved?.imageLayerName === "string" ? saved.imageLayerName : "image",
-    maintainWidth: typeof saved?.maintainWidth === "boolean" ? saved.maintainWidth : true,
+    imageLayerName:
+      typeof saved?.imageLayerName === "string"
+        ? saved.imageLayerName
+        : "image",
+    maintainWidth:
+      typeof saved?.maintainWidth === "boolean" ? saved.maintainWidth : true,
   };
   figma.ui.postMessage({ type: "plugin-ready", settings });
   sendSelectionCount();
@@ -21,7 +28,11 @@ figma.on("selectionchange", sendSelectionCount);
 figma.ui.onmessage = async (msg) => {
   if (msg.type !== "resize-cards") return;
 
-  if (typeof msg.options !== "object" || msg.options === null || Array.isArray(msg.options)) {
+  if (
+    typeof msg.options !== "object" ||
+    msg.options === null ||
+    Array.isArray(msg.options)
+  ) {
     figma.ui.postMessage({ type: "resize-done" });
     return;
   }
@@ -59,14 +70,20 @@ async function resizeSelectedCards(options: ResizeOptions) {
   const selection = figma.currentPage.selection;
 
   if (selection.length === 0) {
-    figma.notify("Please select at least one component instance.", { error: true });
+    figma.notify("Please select at least one component instance.", {
+      error: true,
+    });
     return;
   }
 
   let skippedCount = 0;
   let unavailableCount = 0;
 
-  type Candidate = { node: ResizeableNode; imageLayer: SceneNode; imageFill: ImagePaint };
+  type Candidate = {
+    node: ResizeableNode;
+    imageLayer: SceneNode;
+    imageFill: ImagePaint;
+  };
   const candidates: Candidate[] = [];
 
   for (const node of selection) {
@@ -111,7 +128,10 @@ async function resizeSelectedCards(options: ResizeOptions) {
     if (maintainWidth) {
       node.resize(cardWidth, imageLayerWidth / aspectRatio + currentBodyHeight);
     } else {
-      node.resize(cardWidth * ((imageLayerHeight * aspectRatio) / imageLayerWidth), cardHeight);
+      node.resize(
+        cardWidth * ((imageLayerHeight * aspectRatio) / imageLayerWidth),
+        cardHeight,
+      );
     }
     resizedCount++;
   }

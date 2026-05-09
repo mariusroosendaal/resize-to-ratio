@@ -18,7 +18,8 @@
       ? `${selectionCount} item${selectionCount > 1 ? "s" : ""} selected`
       : "Select one or more cards";
 
-  $: isDisabled = selectionCount === 0 || isResizing || imageLayerName.trim() === "";
+  $: isDisabled =
+    selectionCount === 0 || isResizing || imageLayerName.trim() === "";
 
   function handleResize() {
     isResizing = true;
