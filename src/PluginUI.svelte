@@ -82,11 +82,16 @@
 
   .selection-status {
     margin: 0;
-    padding: var(--size-xsmall) var(--size-small);
+    padding: var(--size-xsmall);
     border: 1px solid var(--figma-color-border);
     border-radius: var(--border-radius-medium);
     color: var(--figma-color-text-secondary);
-    font-size: var(--font-size-xsmall);
+    font-family: var(--font-stack);
+    font-size: var(--body-medium-font-size);
+    font-weight: var(--body-medium-font-weight);
+    letter-spacing: var(--body-medium-letter-spacing);
+    line-height: var(--body-medium-line-height);
     text-align: center;
+    text-wrap: balance;
   }
 </style>

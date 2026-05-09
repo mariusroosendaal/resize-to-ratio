@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.0.2] - 2026-05-09
+
+### Fixed
+
+- Zero-resize result now shows an error notification explaining why nothing was resized, instead of a misleading success toast
+- Notification correctly reports both unavailable images and non-resizable nodes when both occur in the same selection
+- Success notification appends "Press Ctrl/Cmd+Z to undo."
+- Plugin no longer freezes in a loading state if an unexpected error occurs during resize
+- Image layer named the same as a selected card no longer matches the card itself
+
+### Changed
+
+- Image layer name and maintain-width preference are now saved and restored between sessions
+- Action button is disabled when the image layer name field is empty
+- Selection status display replaced with a plain label (was incorrectly using the EmptyState component)
+- Image dimensions fetched in parallel across the selection instead of sequentially
+
 ## [1.0.1] - 2026-05-08
 
 ### Changed

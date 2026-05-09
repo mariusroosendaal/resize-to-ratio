@@ -1,6 +1,6 @@
 {
   "name": "resize-to-ratio",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Resize components to match the aspect ratio of nested image fills.",
   "type": "module",
   "author": "Marius Roosendaal",
