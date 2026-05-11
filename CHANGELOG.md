@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.2] - 2026-05-09
+## [1.0.1] - 2026-05-09
 
 ### Fixed
 
@@ -16,11 +16,6 @@
 - Action button is disabled when the image layer name field is empty
 - Selection status display replaced with a plain label (was incorrectly using the EmptyState component)
 - Image dimensions fetched in parallel across the selection instead of sequentially
-
-## [1.0.1] - 2026-05-08
-
-### Changed
-
 - Image layer name input has an associated label
 
 ## [1.0.0] - 2026-02-19
