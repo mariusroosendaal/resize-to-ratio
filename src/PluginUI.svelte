@@ -1,5 +1,5 @@
 <script>
-  import { Button, Checkbox, Input } from "figma-ui3-kit-svelte";
+  import { Button, Checkbox, Input, Tooltip } from "figma-ui3-kit-svelte";
   import {
     PluginLayout,
     FieldGroup,
@@ -63,14 +63,20 @@
   </PluginLayout>
 
   <Footer variant="full">
-    <Button
-      variant="primary"
-      on:click={handleResize}
-      disabled={isDisabled}
-      fullWidth
+    <Tooltip
+      label="Select frames and enter the image layer name to resize"
+      direction="Top"
+      disabled={!isDisabled}
     >
-      {isResizing ? "Resizing..." : "Resize cards"}
-    </Button>
+      <Button
+        variant="primary"
+        on:click={handleResize}
+        ariaDisabled={isDisabled}
+        fullWidth
+      >
+        {isResizing ? "Resizing..." : "Resize cards"}
+      </Button>
+    </Tooltip>
   </Footer>
 </div>
 
