@@ -1,3 +1,5 @@
+![Resize to Ratio Cover](assets/thumbnail.png)
+
 # Resize to Ratio
 
 Resize components to match the aspect ratio of their nested images.
