@@ -4,6 +4,10 @@
 
 A Figma plugin for resizing components to match the aspect ratio of their nested images.
 
+## Install
+
+Get it from the [Figma Community](https://www.figma.com/community/plugin/1488572643184012930/resize-to-ratio)
+
 ## What it does
 
 Adjusts the dimensions of selected components based on the natural aspect ratio of an image layer inside them. Useful for card components where you want the container to fit the image properly.
