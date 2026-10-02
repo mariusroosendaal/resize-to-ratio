@@ -2,7 +2,7 @@
 
 # Resize to Ratio
 
-A Figma plugin for resizing components to match the aspect ratio of their nested images.
+Resize components to the aspect ratio of the image inside them.
 
 ## Install
 
