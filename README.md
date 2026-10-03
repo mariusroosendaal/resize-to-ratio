@@ -22,9 +22,9 @@ Adjusts the dimensions of selected components based on the natural aspect ratio 
 
 ## Options
 
-- **Image layer name** - Name of the nested layer containing the image fill
-- **Maintain width** - Keep width fixed, adjust height to match ratio
-- **Maintain height** - Keep height fixed, adjust width to match ratio
+- **Image layer name** — Name of the nested layer containing the image fill
+- **Maintain width** — Keep width fixed, adjust height to match ratio
+- **Maintain height** — Keep height fixed, adjust width to match ratio
 
 ## Requirements
 
