@@ -14,21 +14,17 @@ Adjusts the dimensions of selected components based on the natural aspect ratio 
 
 ## Usage
 
-1. Select one or more component instances containing an image layer
+1. Select one or more cards that contain an image layer
 2. Run the plugin
-3. Specify the image layer name (default: `image`)
-4. Choose to maintain width or height
-5. Click resize
+3. Enter the name of the image layer (default: `image`)
+4. Keep **Maintain width** checked to change the height, or clear it to change the width
+5. Click **Resize cards**
 
-## Options
-
-- **Image layer name** — Name of the nested layer containing the image fill
-- **Maintain width** — Keep width fixed, adjust height to match ratio
-- **Maintain height** — Keep height fixed, adjust width to match ratio
+For each screen and what its controls do, see the [user guide](https://figma-plugins.notion.site/Resize-to-Ratio-3eef29c09c9d81b6925cc8c4e9da360c).
 
 ## Requirements
 
-- The image layer must use "Fill" for both width and height constraints.
+- The image layer must resize with its card: **Fill container** in auto layout, or **Left and right** and **Top and bottom** constraints.
 
 ## Development
 
