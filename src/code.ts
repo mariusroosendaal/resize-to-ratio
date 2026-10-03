@@ -1,6 +1,29 @@
+import { createSettingsStore } from "figma-plugin-utilities/lib/figma-helpers";
+
 figma.showUI(__html__, { themeColors: true, width: 240, height: 226 });
 
 const STORAGE_KEY = "resize-to-ratio-settings";
+
+interface ResizeSettings {
+  imageLayerName: string;
+  maintainWidth: boolean;
+}
+
+const settingsStore = createSettingsStore<ResizeSettings>(
+  STORAGE_KEY,
+  (raw) => {
+    const obj =
+      typeof raw === "object" && raw !== null
+        ? (raw as Record<string, unknown>)
+        : {};
+    return {
+      imageLayerName:
+        typeof obj.imageLayerName === "string" ? obj.imageLayerName : "image",
+      maintainWidth:
+        typeof obj.maintainWidth === "boolean" ? obj.maintainWidth : true,
+    };
+  },
+);
 
 const sendSelectionCount = () => {
   figma.ui.postMessage({
@@ -12,15 +35,7 @@ const sendSelectionCount = () => {
 figma.on("selectionchange", sendSelectionCount);
 
 (async () => {
-  const saved = await figma.clientStorage.getAsync(STORAGE_KEY);
-  const settings = {
-    imageLayerName:
-      typeof saved?.imageLayerName === "string"
-        ? saved.imageLayerName
-        : "image",
-    maintainWidth:
-      typeof saved?.maintainWidth === "boolean" ? saved.maintainWidth : true,
-  };
+  const settings = await settingsStore.load();
   figma.ui.postMessage({ type: "plugin-ready", settings });
   sendSelectionCount();
 })();
@@ -39,10 +54,7 @@ figma.ui.onmessage = async (msg) => {
 
   try {
     await resizeSelectedCards(msg.options);
-    await figma.clientStorage.setAsync(STORAGE_KEY, {
-      imageLayerName: msg.options.imageLayerName,
-      maintainWidth: msg.options.maintainWidth,
-    });
+    await settingsStore.save(msg.options);
     sendSelectionCount();
   } catch (error) {
     console.error("Resize failed:", error);
