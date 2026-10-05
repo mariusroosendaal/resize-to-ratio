@@ -1,4 +1,10 @@
-import { createSettingsStore } from "figma-plugin-utilities/lib/figma-helpers";
+import {
+  createSettingsStore,
+  showError,
+  showNotice,
+  showSuccess,
+} from "figma-plugin-utilities/lib/figma-helpers";
+import { plural, UNDO } from "figma-plugin-utilities/lib/format";
 
 figma.showUI(__html__, { themeColors: true, width: 240, height: 226 });
 
@@ -58,7 +64,9 @@ figma.ui.onmessage = async (msg) => {
     sendSelectionCount();
   } catch (error) {
     console.error("Resize failed:", error);
-    figma.notify("Something went wrong.", { error: true });
+    showError(
+      "Couldn't resize the cards. Press Ctrl/Cmd+Z to undo anything half-done, then try again.",
+    );
   } finally {
     figma.ui.postMessage({ type: "resize-done" });
   }
@@ -82,9 +90,7 @@ async function resizeSelectedCards(options: ResizeOptions) {
   const selection = figma.currentPage.selection;
 
   if (selection.length === 0) {
-    figma.notify("Please select at least one component instance.", {
-      error: true,
-    });
+    showNotice("Select the cards to resize.");
     return;
   }
 
@@ -148,24 +154,29 @@ async function resizeSelectedCards(options: ResizeOptions) {
     resizedCount++;
   }
 
+  if (resizedCount === 0 && candidates.length === 0) {
+    showNotice(
+      `Nothing to resize: no selected card has a "${imageLayerName}" layer with an image. Check the image layer name.`,
+    );
+    return;
+  }
   if (resizedCount === 0) {
-    const reason =
-      candidates.length === 0
-        ? `no layer named "${imageLayerName}" with an image fill was found`
-        : "image dimensions could not be read";
-    figma.notify(`No cards resized — ${reason}.`, { error: true });
+    showError(
+      "Couldn't read the images' sizes. Wait for the images to load, then try again.",
+    );
     return;
   }
 
-  let message = `Resized ${resizedCount} card${resizedCount !== 1 ? "s" : ""}`;
+  let message = `Resized ${plural(resizedCount, "card")}`;
   if (unavailableCount > 0) {
-    message += `, skipped ${unavailableCount} (image not loaded)`;
+    message += `, and skipped ${plural(unavailableCount, "card")} whose image hadn't loaded`;
   }
   if (skippedCount > 0) {
-    message += `, skipped ${skippedCount} non-resizable node${skippedCount !== 1 ? "s" : ""}`;
+    message += `. ${plural(skippedCount, "selected layer")} can't be resized`;
   }
-  message += ". Press Ctrl/Cmd+Z to undo.";
-  figma.notify(message);
+  message += `. ${UNDO}`;
+  if (unavailableCount > 0) showError(message);
+  else showSuccess(message);
 }
 
 // Searches descendants only — skipping the root — so a card named "image" won't match itself.

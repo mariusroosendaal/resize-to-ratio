@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Resizing with nothing selected, or with no card that has the image layer, shows a regular notification that says what to check, instead of an error. A resize that skipped cards whose image hadn't loaded shows in red
+
 ## [1.0.1] - 2026-05-09
 
 ### Fixed
