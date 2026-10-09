@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Keeping the height of a card with padding beside its image gives it the right width, since only the image's width follows its ratio, as in Populate
+
 ### Changed
 
 - Resizing with nothing selected, or with no card that has the image layer, shows a regular notification that says what to check, instead of an error. A resize that skipped cards whose image hadn't loaded shows in red

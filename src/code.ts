@@ -147,7 +147,7 @@ async function resizeSelectedCards(options: ResizeOptions) {
       node.resize(cardWidth, imageLayerWidth / aspectRatio + currentBodyHeight);
     } else {
       node.resize(
-        cardWidth * ((imageLayerHeight * aspectRatio) / imageLayerWidth),
+        imageLayerHeight * aspectRatio + cardWidth - imageLayerWidth,
         cardHeight,
       );
     }
