@@ -72,7 +72,6 @@
         variant="primary"
         on:click={handleResize}
         ariaDisabled={isDisabled}
-        fullWidth
       >
         {isResizing ? "Resizing..." : "Resize cards"}
       </Button>
